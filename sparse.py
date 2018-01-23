@@ -5,7 +5,7 @@ def sparse_conv(tensor,binary_mask = None,filters=32,kernel_size=3,strides=2):
     if binary_mask == None: #first layer has no binary mask
         b,h,w,c = tensor.get_shape()
         channels=tf.split(tensor,c,axis=3)
-        #assume that if one channel has no information, ALL CHANNELS HAVE NO INFORMATION
+        #assume that if one channel has no information, all channels have no information
         binary_mask = tf.where(tf.equal(channels[0], 0), tf.zeros_like(channels[0]), tf.ones_like(channels[0])) #mask should only have the size of (B,H,W,1)
 
     features = tf.multiply(tensor,binary_mask)
@@ -15,7 +15,7 @@ def sparse_conv(tensor,binary_mask = None,filters=32,kernel_size=3,strides=2):
     norm = tf.where(tf.equal(norm,0),tf.zeros_like(norm),tf.reciprocal(norm))
     _,_,_,bias_size = norm.get_shape()
 
-    b = tf.Variable(tf.constant(0.01, shape=[bias_size]))
+    b = tf.Variable(tf.constant(0.0, shape=[bias_size]),trainable=True)
     feature = tf.multiply(features,norm)+b
     mask = tf.layers.max_pooling2d(binary_mask,strides = strides,pool_size=3,padding="same")
 
