@@ -33,7 +33,7 @@ def sparse_conv(tensor,binary_mask = None,filters=32,kernel_size=3,strides=2,l2_
 
     b = tf.Variable(tf.constant(0.0, shape=[bias_size]),trainable=True)
     feature = tf.multiply(features,norm)+b
-    mask = tf.layers.max_pooling2d(binary_mask,strides = strides,pool_size=3,padding="same")
+    mask = tf.layers.max_pooling2d(binary_mask,strides = strides,pool_size=kernel_size,padding="same")
 
     return feature,mask
 
